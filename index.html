@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   </head>
   <body class="bg-gray-50">
-      <div id="app" class="container mx-auto px-4 max-w-full">
+    <div id="app" class="container w-auto max-w-full">
       <header class="bg-green-400 p-2 flex flex-row justify-between">
         <a href="index.html"
           ><h1 class="text-white font-bold text-3xl mt-6 m-2">البدر</h1></a
@@ -21,7 +21,7 @@
       <nav class="bg-green-300 p-3">
         <ul class="flex flex-row justify-around">
           <li class="text-white font-bold text-lg hover:underline">
-            <a href="#">قسم التحضيري</a>
+            <a href="prepa.html">قسم التحضيري</a>
           </li>
           <li class="text-white font-bold text-lg hover:underline">
             <a href="#">المدرسة القرانية</a>
@@ -35,8 +35,8 @@
         </ul>
       </nav>
       <!-----Form----->
-      <div class="flex items-center justify-center p-3 mt-10">
-        <form class="bg-white w-1/2 shadow p-3 rounded-lg">
+      <div class="flex items-center justify-center p-3 mt-10 m-auto">
+        <form class="bg-white w-full shadow p-3 rounded-lg">
           <div class="flex flex-col items-center justify-center">
             <img class="rounded-full" src="reading.png" width="80" />
             <h2 class="font-bold text-lg">التسجيل في قسم التحضيري</h2>
@@ -387,7 +387,7 @@
               this.s++;
             } else {
               alert(
-                "الرجاء ادخال جميع المعلومات الخاصة بالطفل"
+                "الرجاء ادخال جميع المعلومات الخاصة "
               );
             }
           }
