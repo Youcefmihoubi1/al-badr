@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Al Badr | البدر</title>
+    <link rel="icon" href="logo.png" />
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  </head>
+  <body class="bg-gray-50">
+    <div id="app" class="container w-auto max-w-full">
+      <header class="bg-green-400 p-2 flex flex-row justify-between">
+        <a href="index.html"
+          ><h1 class="text-white font-bold text-3xl mt-6 m-2">البدر</h1></a
+        >
+        <a href="index.html"
+          ><img class="ml-2" src="logo.png" alt="icon" width="90"
+        /></a>
+      </header>
+      <nav class="bg-green-300 p-3">
+        <ul class="flex flex-row justify-around">
+          <li class="text-white font-bold text-lg hover:underline">
+            <a href="#">قسم التحضيري</a>
+          </li>
+          <li class="text-white font-bold text-lg hover:underline">
+            <a href="#">المدرسة القرانية</a>
+          </li>
+          <li class="text-white font-bold text-lg hover:underline">
+            <a href="#">الزكاة</a>
+          </li>
+          <li class="text-white font-bold text-lg hover:underline">
+            <a href="#">تواصل معنا</a>
+          </li>
+        </ul>
+      </nav>
+      <!-----Form----->
+      <div class="flex justify-center items-start p-3 mt-10">
+
+        <form class="bg-white w-full max-w-lg shadow p-6 rounded-lg">
+
+          <div class="flex flex-col items-center justify-center">
+            <img class="rounded-full" src="reading.png" width="80" />
+            <h2 class="font-bold text-lg">التسجيل في قسم التحضيري</h2>
+          </div>
+          <div>
+            <ul class="flex flex-row justify-around">
+              <li :class="{'font-bold text-green-500 ': s >= 0}">
+                معلومات الولي
+              </li>
+              <li :class="{'font-bold text-green-500': s >= 1}">
+                معلومات الطفل
+              </li>
+              <li :class="{'font-bold text-green-500': s === 2}">
+                تأكيد المعلومات
+              </li>
+            </ul>
+            <div class="h-2 bg-gray-200 ml-3 mr-3 rounded flex justify-right">
+              <div class="h-2 bg-green-300 w-1/3" v-if="s==0"></div>
+              <div class="h-2 bg-green-300 w-1/2" v-else-if="s==1"></div>
+              <div class="h-2 bg-green-300 w-full" v-else-if="s==2"></div>
+            </div>
+          </div>
+          <!--Parent Info-->
+          <div id="step" v-if="s==0">
+            <div class="mt-5 ml-2 mr-2">
+              <p class="font-bold">الاسم</p>
+              <input
+                type="text"
+                v-model="parent_fname"
+                class="border-2 w-full mt-1 rounded p-2"
+                placeholder="الاسم"
+                required
+              />
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">اللقب</p>
+              <input
+                type="text"
+                v-model="parent_lname"
+                class="border-2 w-full mt-1 rounded p-2"
+                placeholder="اللقب"
+                required
+              />
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">تاريخ الميلاد</p>
+              <input
+                type="date"
+                v-model="parent_bdate"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+              />
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">ولاية الميلاد</p>
+              <select
+                v-model="parent_wilaya"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+                @change="updateDairas"
+              >
+                <option disabled value="">---اختر ولاية---</option>
+                <option v-for="w in wilaya">{{w}}</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">دائرة الميلاد</p>
+              <select
+                v-model="parent_daira"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+                @change="updateCommunes"
+              >
+                <option disabled value="">---اختر دائرة---</option>
+                <option v-for="d in daira">{{d}}</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">بلدية الميلاد</p>
+              <select
+                v-model="parent_commune"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+              >
+                <option disabled value="">---اختر بلدية---</option>
+                <option v-for="c in commune">{{c}}</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">رقم التعريف الوطني</p>
+              <input
+                type="text"
+                v-model="parent_id"
+                class="border-2 w-full mt-1 rounded p-2"
+                placeholder="رقم التعريف الوطني"
+                minlength="18"
+                maxlength="18"
+                required
+              />
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">عنوان الاقامة</p>
+              <textarea
+                v-model="parent_residence"
+                class="border-2 w-full mt-1 rounded p-2"
+                placeholder="عنوان الاقامة"
+                required
+              ></textarea>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">رقم الهاتف</p>
+              <input
+                type="tel"
+                v-model="parent_phone"
+                class="border-2 w-full mt-1 rounded p-2"
+                placeholder="رقم الهاتف"
+                required
+                maxlength="9"
+                minlength="9"
+              />
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">صلة القرابة</p>
+              <select
+                v-model="parent_relation"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+              >
+                <option disabled value="">---صلة القرابة</option>
+                <option value="ولي">ولي</option>
+                <option value="وصي">وصي</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2 flex">
+              <input
+                type="checkbox"
+                v-model="conditions"
+                required
+                class="ml-2"
+              />
+              <p class="font-bold">
+                الموافقة على
+                <a
+                  href="#"
+                  @click.prevent="showTerms = true"
+                  class="text-green-500 underline"
+                  >شروط الاستخدام</a
+                >
+              </p>
+            </div>
+            <div class="mt-3 ml-2 mr-2 flex justify-center">
+              <button
+                class="bg-green-400 w-16 rounded shadow hover:bg-green-500 text-center text-white text-md h-9"
+                @click="next_step()"
+              >
+                التالي
+              </button>
+            </div>
+            <!---terms-->
+            <!-- نافذة شروط الاستخدام -->
+            <div
+              v-if="showTerms"
+              class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            >
+              <div
+                class="bg-white rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 max-h-[80vh] overflow-y-auto relative"
+              >
+                <button
+                  @click="showTerms = false"
+                  class="absolute top-2 left-2 text-gray-600 hover:text-black text-2xl"
+                >
+                  &times;
+                </button>
+                <h2 class="text-xl font-bold mb-4 text-green-500 text-center">
+                  شروط الاستخدام
+                </h2>
+                <p class="mb-2">
+                  <strong>1. البيانات الشخصية:</strong> تُستخدم فقط لأغراض
+                  التسجيل، ونضمن سريتها وعدم مشاركتها مع جهات خارجية.
+                </p>
+                <p class="mb-2">
+                  <strong>2. الاستخدام:</strong> هذه المنصة مخصصة لتسجيل الأطفال
+                  في قسم التحضيري والبرامج التعليمية الأخرى فقط.
+                </p>
+                <p class="mb-2">
+                  <strong>3. المسؤولية:</strong> يجب أن يكون المسجل هو الولي
+                  الشرعي أو الوصي على الطفل.
+                </p>
+                <p class="mb-2">
+                  <strong>4. الأمان:</strong> نسعى لحماية بياناتكم، لكننا لا
+                  نضمن الحماية الكاملة من التهديدات الإلكترونية.
+                </p>
+                <p class="mb-2">
+                  <strong>5. التعديلات:</strong> قد يتم تحديث هذه الشروط دون
+                  إشعار مسبق، ويتعين على المستخدم مراجعتها دورياً.
+                </p>
+                <p>
+                  <strong>6. تواصل معنا:</strong> لأي استفسار، الرجاء استخدام
+                  صفحة "تواصل معنا".
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!--child Info-->
+          <div id="step" v-if="s==1">
+            <div class="mt-5 ml-2 mr-2">
+              <p class="font-bold">الاسم</p>
+              <input
+                type="text"
+                v-model="child_fname"
+                class="border-2 w-full mt-1 rounded p-2"
+                placeholder="الاسم"
+                required
+              />
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">اللقب</p>
+              <input
+                type="text"
+                v-model="child_lname"
+                class="border-2 w-full mt-1 rounded p-2"
+                placeholder="اللقب"
+                required
+              />
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">تاريخ الميلاد</p>
+              <input
+                type="date"
+                v-model="child_bdate"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+              />
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">ولاية الميلاد</p>
+              <select
+                v-model="child_wilaya"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+                @change="updateDairas"
+              >
+                <option disabled value="">---اختر ولاية---</option>
+                <option v-for="w in wilaya">{{w}}</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">دائرة الميلاد</p>
+              <select
+                v-model="child_daira"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+                @change="updateCommunes"
+              >
+                <option disabled value="">---اختر دائرة---</option>
+                <option v-for="d in daira">{{d}}</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">بلدية الميلاد</p>
+              <select
+                v-model="child_commune"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+              >
+                <option disabled value="">---اختر بلدية---</option>
+                <option v-for="c in commune">{{c}}</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">الجنس</p>
+              <select
+                v-model="child_gender"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+              >
+                <option disabled value="">---الجنس---</option>
+                <option value="ذكر">ذكر</option>
+                <option value="أنثى">أنثى</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">
+                هل ابنك يعاني من أمراض مزمنة أو مشاكل صحية
+              </p>
+              <select
+                v-model="child_health"
+                class="border-2 w-full mt-1 rounded p-2"
+                required
+              >
+                <option disabled value="">---الحالة الصحية---</option>
+                <option value="سليم">نعم</option>
+                <option value="مريض">لا</option>
+              </select>
+            </div>
+            <div class="mt-3 ml-2 mr-2">
+              <p class="font-bold">رقم شهادة الميلاد</p>
+              <input
+                type="text"
+                v-model="child_id"
+                class="border-2 w-full mt-1 rounded p-2"
+                placeholder="رقم شهادة الميلاد"
+                minlength="18"
+                maxlength="18"
+                required
+              />
+            </div>
+
+            <div class="mt-3 ml-2 mr-2 flex justify-between flex-row">
+              <button
+                class="bg-green-400 w-16 rounded shadow hover:bg-green-500 text-center text-white text-md h-9"
+                @click="prev_step()"
+              >
+                السابق
+              </button>
+              <button
+                class="bg-green-400 w-16 rounded shadow hover:bg-green-500 text-center text-white text-md h-9"
+                @click="next_step()"
+              >
+                التالي
+              </button>
+            </div>
+          </div>
+          <div v-if="s === 2">
+            <h2 class="text-xl font-bold text-center mb-4">تأكيد المعلومات</h2>
+            <div class="mb-4">
+              <p class="text-red-500 font-semibold">معلومات الولي / الوصي</p>
+              <p><span class="font-bold">الاسم:</span> {{ parent_fname }}</p>
+              <p><span class="font-bold">اللقب:</span> {{ parent_lname }}</p>
+              <p>
+                <span class="font-bold">تاريخ الميلاد:</span> {{ parent_bdate }}
+              </p>
+              <p>
+                <span class="font-bold">مكان الميلاد:</span> ولاية
+                {{parent_wilaya}} دائرة {{parent_daira}} بلدية
+                {{parent_commune}}
+              </p>
+              <p>
+                <span class="font-bold">رقم التعريف الوطني:</span> {{ parent_id
+                }}
+              </p>
+              <p>
+                <span class="font-bold">رقم الهاتف:</span> 0{{ parent_phone }}
+              </p>
+              <p>
+                <span class="font-bold">عنوان الاقامة:</span>{{ parent_residence
+                }}
+              </p>
+              <p>
+                <span class="font-bold">صلة القرابة:</span> {{ parent_relation
+                }}
+              </p>
+            </div>
+            <div class="mb-4">
+              <p class="text-red-500 font-semibold">معلومات الطفل</p>
+              <p><span class="font-bold">الاسم:</span> {{ child_fname }}</p>
+              <p><span class="font-bold">اللقب:</span> {{ child_lname }}</p>
+              <p>
+                <span class="font-bold">تاريخ الميلاد:</span> {{ child_bdate }}
+              </p>
+              <p>
+                <span class="font-bold">مكان الميلاد:</span> ولاية
+                {{child_wilaya}} دائرة {{child_daira}} بلدية {{child_commune}}
+              </p>
+              <p>
+                <span class="font-bold">رقم شهادة الميلاد:</span> {{ child_id }}
+              </p>
+              <p><span class="font-bold">الجنس:</span> {{ child_gender }}</p>
+              <p>
+                <span class="font-bold">الحالة الصحية:</span> {{ child_health }}
+              </p>
+            </div>
+            <div class="flex justify-between">
+              <button
+                class="bg-gray-400 text-white px-6 py-2 rounded shadow hover:bg-gray-500"
+                @click="prev_step"
+              >
+                السابق
+              </button>
+              <button
+                class="bg-green-400 text-white px-6 py-2 rounded shadow hover:bg-green-500"
+                @click="confirm"
+              >
+                تأكيد
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <footer class="bg-green-400 p-2 flex flex-row justify-center h-40 mt-10">
+        <p class="text-white font-semibold mt-16">
+          Developed By<a
+            href="https://github.com/youcefmihoubi1"
+            target="_blank"
+          >
+            @MihoubiYoucef</a
+          >
+        </p>
+      </footer>
+    </div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          s: 0,
+          locations: [],
+          wilaya: [],
+          daira: [],
+          commune: [],
+          parent_fname: null,
+          parent_lname: null,
+          parent_bdate: null,
+          parent_wilaya: null,
+          parent_daira: null,
+          parent_commune: null,
+          parent_residence: null,
+          parent_phone: null,
+          parent_id: null,
+          parent_relation: null,
+          conditions: null,
+          showTerms: false,
+
+          child_fname: null,
+          child_lname: null,
+          child_bdate: null,
+          child_wilaya: null,
+          child_daira: null,
+          child_commune: null,
+          child_id: null,
+          child_gender: null,
+          child_health: null,
+        };
+      },
+      methods: {
+        next_step() {
+          if (this.s === 0) {
+            if (this.validateParentInfo()) {
+              this.s++;
+            } else {
+              alert("الرجاء ادخال جميع المعلومات الخاصة بالولي");
+            }
+          } else if (this.s === 1) {
+            if (this.validateChildInfo()) {
+              this.s++;
+            } else {
+              alert("الرجاء ادخال جميع المعلومات الخاصة ");
+            }
+          }
+        },
+
+        prev_step() {
+          this.s--;
+        },
+        validateParentInfo() {
+          return (
+            this.parent_fname &&
+            this.parent_lname &&
+            this.parent_bdate &&
+            this.parent_wilaya &&
+            this.parent_daira &&
+            this.parent_commune &&
+            this.parent_id &&
+            this.parent_residence &&
+            this.parent_phone &&
+            this.parent_relation &&
+            this.conditions
+          );
+        },
+
+        validateChildInfo() {
+          return (
+            this.child_fname &&
+            this.child_lname &&
+            this.child_bdate &&
+            this.child_wilaya &&
+            this.child_daira &&
+            this.child_commune &&
+            this.child_id &&
+            this.child_gender &&
+            this.child_health
+          );
+        },
+
+        updateDairas() {
+          if (this.s === 0) {
+            this.daira = [
+              ...new Set(
+                this.locations
+                  .filter((x) => x.wilaya_name === this.parent_wilaya)
+                  .map((x) => x.daira_name)
+              ),
+            ];
+            this.parent_daira = "";
+            this.parent_commune = "";
+            this.commune = [];
+          }
+          if (this.s === 1) {
+            this.daira = [
+              ...new Set(
+                this.locations
+                  .filter((x) => x.wilaya_name === this.child_wilaya)
+                  .map((x) => x.daira_name)
+              ),
+            ];
+            this.child_daira = "";
+            this.child_commune = "";
+            this.commune = [];
+          }
+        },
+        updateCommunes() {
+          if (this.s === 0) {
+            this.commune = this.locations
+              .filter(
+                (x) =>
+                  x.wilaya_name === this.parent_wilaya &&
+                  x.daira_name === this.parent_daira
+              )
+              .map((x) => x.commune_name);
+            this.parent_commune = "";
+          }
+          if (this.s === 1) {
+            this.commune = this.locations
+              .filter(
+                (x) =>
+                  x.wilaya_name === this.child_wilaya &&
+                  x.daira_name === this.child_daira
+              )
+              .map((x) => x.commune_name);
+            this.child_commune = "";
+          }
+        },
+        confirm() {
+          alert("تم التسجيل بنجاح");
+        },
+      },
+      mounted() {
+        fetch("wilaya.json")
+          .then((res) => res.json())
+          .then((data) => {
+            this.locations = data.map((x) => ({
+              ...x,
+              wilaya_name: x.wilaya_name.trim(),
+              daira_name: x.daira_name.trim(),
+              commune_name: x.commune_name.trim(),
+            }));
+            this.wilaya = [
+              ...new Set(this.locations.map((x) => x.wilaya_name)),
+            ];
+          });
+      },
+    });
+    app.mount("#app");
+  </script>
+</html>
