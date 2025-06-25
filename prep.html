@@ -29,7 +29,7 @@
             <a href="qur.html">المدرسة القرانية</a>
           </li>
           <li class="text-white font-bold text-sm hover:underline">
-            <a href="#">الزكاة</a>
+            <a href="zakat.html">الزكاة</a>
           </li>
           <li class="text-white font-bold text-sm hover:underline">
             <a href="#">تواصل معنا</a>
@@ -194,7 +194,7 @@
             <div class="mt-3 ml-2 mr-2 flex justify-center">
               <button
                 class="bg-green-400 w-16 rounded shadow hover:bg-green-500 text-center text-white text-md h-9"
-                @click="next_step()"
+                @click.prevent="next_step()"
               >
                 التالي
               </button>
@@ -359,7 +359,7 @@
               </button>
               <button
                 class="bg-green-400 w-16 rounded shadow hover:bg-green-500 text-center text-white text-md h-9"
-                @click="next_step()"
+                @click.prevent="next_step()"
               >
                 التالي
               </button>
@@ -423,7 +423,7 @@
               </button>
               <button
                 class="bg-green-400 text-white px-6 py-2 rounded shadow hover:bg-green-500"
-                @click="confirm"
+               @click.prevent="confirm"
               >
                 تأكيد
               </button>
@@ -497,6 +497,7 @@
           this.s--;
         },
         validateParentInfo() {
+          const phonePattern = /^[5-7][0-9]{8}$/;
           return (
             this.parent_fname &&
             this.parent_lname &&
@@ -506,7 +507,7 @@
             this.parent_commune &&
             this.parent_id &&
             this.parent_residence &&
-            this.parent_phone &&
+            phonePattern.test(this.parent_phone) &&
             this.parent_relation &&
             this.conditions
           );
