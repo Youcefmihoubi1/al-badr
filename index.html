@@ -497,6 +497,7 @@
           this.s--;
         },
         validateParentInfo() {
+          const phonePattern = /^[5-7][0-9]{8}$/;
           return (
             this.parent_fname &&
             this.parent_lname &&
@@ -506,7 +507,7 @@
             this.parent_commune &&
             this.parent_id &&
             this.parent_residence &&
-            this.parent_phone &&
+            phonePattern.test(this.p_phone) &&
             this.parent_relation &&
             this.conditions
           );
